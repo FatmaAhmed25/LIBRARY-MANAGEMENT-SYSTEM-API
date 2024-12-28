@@ -1,6 +1,5 @@
-package com.librarymanagementsystem.service;
+package com.librarymanagementsystem.security;
 
-import com.librarymanagementsystem.model.MyUserDetails;
 import com.librarymanagementsystem.model.User;
 import com.librarymanagementsystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
