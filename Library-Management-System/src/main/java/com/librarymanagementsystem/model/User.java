@@ -3,13 +3,12 @@ package com.librarymanagementsystem.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Data
 @Entity
 @Table(name="users")
 @NoArgsConstructor
@@ -33,6 +32,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserType userType;
+
+    //for customers only
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BorrowingRecord> borrowingRecords;
 
     public String getUsername() {
         return username;
