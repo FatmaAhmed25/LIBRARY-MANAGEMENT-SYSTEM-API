@@ -23,26 +23,26 @@ public class BookController {
         return ResponseEntity.ok(savedBook);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> removeBook(@PathVariable Long id) {
         bookService.removeBook(id);
         return ResponseEntity.ok("Book removed successfully");
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
         return bookService.getBookById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/search")
+    @GetMapping("/searchByTitle")
     public ResponseEntity<List<Book>> getBookByTitle(@RequestParam String title) {
         List<Book> books = bookService.getBookByTitle(title);
         return ResponseEntity.ok(books);
     }
 
-    @GetMapping
+    @GetMapping("getAllBooks")
     public ResponseEntity<List<Book>> getAllBooks() {
         return ResponseEntity.ok(bookService.getAllBooks());
     }
