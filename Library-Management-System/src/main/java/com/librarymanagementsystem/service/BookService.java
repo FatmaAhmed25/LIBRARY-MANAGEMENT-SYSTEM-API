@@ -14,7 +14,6 @@ public class BookService {
     private BookRepository bookRepository;
 
     public Book addBook(Book book) {
-        book.setTitle("Book Title");
         return bookRepository.save(book);
     }
 
