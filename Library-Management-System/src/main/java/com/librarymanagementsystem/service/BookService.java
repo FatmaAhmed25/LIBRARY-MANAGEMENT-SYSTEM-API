@@ -33,6 +33,19 @@ public class BookService {
         return bookRepository.findAll();
     }
 
+    public Book updateBook(Long id, Book updatedBook) {
+        Book existingBook = bookRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+
+        existingBook.setTitle(updatedBook.getTitle());
+        existingBook.setAuthor(updatedBook.getAuthor());
+        existingBook.setPublicationYear(updatedBook.getPublicationYear());
+        existingBook.setQuantity(updatedBook.getQuantity());
+
+        return bookRepository.save(existingBook);
+    }
+
+
 
 
 

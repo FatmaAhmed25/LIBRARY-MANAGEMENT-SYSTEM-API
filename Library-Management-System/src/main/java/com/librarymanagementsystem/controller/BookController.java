@@ -46,4 +46,12 @@ public class BookController {
     public ResponseEntity<List<Book>> getAllBooks() {
         return ResponseEntity.ok(bookService.getAllBooks());
     }
+
+    @PutMapping("/update/{id}")
+    @SecurityRequirement(name = "BearerAuth")
+    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
+        Book updatedBookRecord = bookService.updateBook(id, updatedBook);
+        return ResponseEntity.ok(updatedBookRecord);
+    }
+
 }
