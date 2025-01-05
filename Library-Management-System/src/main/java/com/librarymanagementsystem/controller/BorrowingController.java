@@ -19,11 +19,11 @@ public class BorrowingController {
 
     @PostMapping("/{bookId}/{customerId}")
     @SecurityRequirement(name="BearerAuth")
-    public ResponseEntity<BorrowingRecord> borrowBook(
+    public ResponseEntity<BorrowingRecordDTO> borrowBook(
             @PathVariable Long customerId,
             @PathVariable Long bookId
     ) {
-        BorrowingRecord record = borrowingService.borrowBook(bookId, customerId);
+        BorrowingRecordDTO record = borrowingService.borrowBook(bookId, customerId);
         return ResponseEntity.ok(record);
     }
 
@@ -33,6 +33,15 @@ public class BorrowingController {
             @PathVariable Long customerId) {
         List<BorrowingRecordDTO> records = borrowingService.getBorrowedBooks(customerId);
         return ResponseEntity.ok(records);
+    }
+
+    @PutMapping("/return/{borrowRecordId}")
+    @SecurityRequirement(name="BearerAuth")
+    public ResponseEntity<BorrowingRecord> returnBook(
+            @PathVariable Long borrowRecordId
+    ) {
+        BorrowingRecord record = borrowingService.returnBook(borrowRecordId);
+        return ResponseEntity.ok(record);
     }
 
 }

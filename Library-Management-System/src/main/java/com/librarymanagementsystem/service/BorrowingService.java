@@ -27,7 +27,7 @@ public class BorrowingService {
     @Autowired
     ModelMapper modelMapper;
 
-    public BorrowingRecord borrowBook(Long bookId, Long customerId) {
+    public BorrowingRecordDTO borrowBook(Long bookId, Long customerId) {
         // Fetch customer
         User customer = userRepository.findById(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
@@ -55,7 +55,15 @@ public class BorrowingService {
         // Update book quantity
         book.setQuantity(book.getQuantity() - 1);
         bookRepository.save(book);
-        return savedRecord;
+
+        BorrowingRecordDTO borrowingRecordDTO = modelMapper.map(savedRecord, BorrowingRecordDTO.class);
+
+        borrowingRecordDTO.setCustomerId(savedRecord.getCustomer().getId());
+        borrowingRecordDTO.setCustomerUsername(savedRecord.getCustomer().getUsername());
+        borrowingRecordDTO.setBookId(savedRecord.getBook().getId());
+        borrowingRecordDTO.setBookTitle(savedRecord.getBook().getTitle());
+
+        return borrowingRecordDTO;
     }
 
     public List<BorrowingRecordDTO> getBorrowedBooks(Long customerId) {
@@ -80,5 +88,32 @@ public class BorrowingService {
                 })
                 .collect(Collectors.toList());
     }
+
+    public BorrowingRecord returnBook(Long borrowRecordId) {
+        // Fetch the borrowing record
+        BorrowingRecord record = borrowingRecordRepository.findById(borrowRecordId)
+                .orElseThrow(() -> new IllegalArgumentException("Borrowing record not found"));
+
+        // Check if the book has already been returned
+        if (record.getReturnDate() != null) {
+            throw new IllegalStateException("Book has already been returned");
+        }
+
+        // Mark the return date
+        record.setReturnDate(LocalDate.now());
+
+        // Fetch the associated book and increase its quantity
+        Book book = record.getBook();
+        book.setQuantity(book.getQuantity() + 1);
+
+        // Save the updated borrowing record and book
+        borrowingRecordRepository.save(record);
+        bookRepository.save(book);
+
+        return record;
+    }
+
+
+
 }
 
