@@ -14,4 +14,6 @@ public interface BorrowingRecordRepository extends JpaRepository<BorrowingRecord
     List<BorrowingRecord> findByCustomer(User customer);
 
     boolean existsByBookAndReturnDateIsNull(Book book);
+
+    void deleteAllByCustomer(User customer);
 }
