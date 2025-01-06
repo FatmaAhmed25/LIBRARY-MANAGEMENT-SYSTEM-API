@@ -1,14 +1,18 @@
 package com.librarymanagementsystem.service;
 
+import com.librarymanagementsystem.dto.UserDTO;
 import com.librarymanagementsystem.model.User;
 import com.librarymanagementsystem.repository.UserRepository;
 import com.librarymanagementsystem.security.JWTService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -21,6 +25,9 @@ public class UserService {
 
     @Autowired
     JWTService jwtService;
+
+    @Autowired
+    ModelMapper modelMapper;
 
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 
@@ -36,4 +43,10 @@ public class UserService {
             return jwtService.generateToken(user.getUsername());
         return "FAIL";
     }
+
+    public Optional<UserDTO> getUserById(Long id) {
+        return userRepository.findById(id)
+                .map(user -> modelMapper.map(user, UserDTO.class));
+    }
+
 }
