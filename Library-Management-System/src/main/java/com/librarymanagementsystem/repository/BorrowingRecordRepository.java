@@ -1,5 +1,6 @@
 package com.librarymanagementsystem.repository;
 
+import com.librarymanagementsystem.model.Book;
 import com.librarymanagementsystem.model.BorrowingRecord;
 import com.librarymanagementsystem.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,6 @@ import java.util.List;
 @Repository
 public interface BorrowingRecordRepository extends JpaRepository<BorrowingRecord, Long> {
     List<BorrowingRecord> findByCustomer(User customer);
+
+    boolean existsByBookAndReturnDateIsNull(Book book);
 }

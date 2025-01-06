@@ -2,6 +2,7 @@ package com.librarymanagementsystem.service;
 
 import com.librarymanagementsystem.model.Book;
 import com.librarymanagementsystem.repository.BookRepository;
+import com.librarymanagementsystem.repository.BorrowingRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +14,26 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private BorrowingRecordRepository borrowingRecordRepository;
+
     public Book addBook(Book book) {
         return bookRepository.save(book);
     }
 
     public void removeBook(Long id) {
-        bookRepository.deleteById(id);
+        // Check if the book exists
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+
+        // Check for active borrowing records
+        boolean hasActiveRecords = borrowingRecordRepository.existsByBookAndReturnDateIsNull(book);
+        if (hasActiveRecords) {
+            throw new IllegalStateException("Cannot delete book with active borrowing records");
+        }
+        // Delete the book
+        bookRepository.delete(book);
+
     }
 
     public Optional<Book> getBookById(Long id) {
