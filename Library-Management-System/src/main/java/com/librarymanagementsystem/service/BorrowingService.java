@@ -9,6 +9,7 @@ import com.librarymanagementsystem.repository.BorrowingRecordRepository;
 import com.librarymanagementsystem.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -112,6 +113,36 @@ public class BorrowingService {
 
         return record;
     }
+
+    public List<BorrowingRecordDTO> fetchSortedBorrowingHistory(Long customerId, String sortBy, String sortDirection) {
+        // Validate customer existence
+        User customer = userRepository.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+
+        // Ensure the user is a customer
+        if (customer.getUserType() != User.UserType.ROLE_CUSTOMER) {
+            throw new IllegalStateException("Only customers have borrowing records");
+        }
+
+        // Define sorting direction
+        Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        // Fetch borrowing records with sorting
+        List<BorrowingRecord> borrowingRecords = borrowingRecordRepository.findByCustomer(customer, Sort.by(direction, sortBy));
+
+        // Map borrowing records to DTOs
+        return borrowingRecords.stream()
+                .map(record -> {
+                    BorrowingRecordDTO dto = modelMapper.map(record, BorrowingRecordDTO.class);
+                    dto.setCustomerId(record.getCustomer().getId());
+                    dto.setCustomerUsername(record.getCustomer().getUsername());
+                    dto.setBookId(record.getBook().getId());
+                    dto.setBookTitle(record.getBook().getTitle());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
 
 
 

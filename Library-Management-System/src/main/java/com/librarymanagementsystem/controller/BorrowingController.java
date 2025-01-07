@@ -44,4 +44,13 @@ public class BorrowingController {
         return ResponseEntity.ok(record);
     }
 
+    @GetMapping("/history/{customerId}")
+    public ResponseEntity<List<BorrowingRecordDTO>> getBorrowingHistorySorted(
+            @PathVariable Long customerId,
+            @RequestParam(defaultValue = "borrowDate") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection) {
+        List<BorrowingRecordDTO> history = borrowingService.fetchSortedBorrowingHistory(customerId, sortBy, sortDirection);
+        return ResponseEntity.ok(history);
+    }
+
 }
