@@ -42,7 +42,7 @@ public class SecurityConfig {
         // we want to pass through JWT filter (to validate token) before userPasswordAuthenticationFilter
         return http.csrf(customizer -> customizer.disable()).
                 authorizeHttpRequests(request -> request
-                        .requestMatchers("register", "login")
+                        .requestMatchers("api/register", "api/login")
                         .permitAll()
                         .requestMatchers(SWAGGER_AUTHLIST).permitAll()
                         .anyRequest().authenticated())

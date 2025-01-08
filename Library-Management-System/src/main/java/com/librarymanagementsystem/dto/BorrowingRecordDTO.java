@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BorrowingRecordDTO {
-    private Long id;
+    private Long borrowingRecordId;
     private Long bookId;
     private String bookTitle;
     private Long customerId;
@@ -17,12 +17,12 @@ public class BorrowingRecordDTO {
     private LocalDate returnDate;
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getBorrowingRecordId() {
+        return borrowingRecordId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBorrowingRecordId(Long borrowingRecordId) {
+        this.borrowingRecordId = borrowingRecordId;
     }
 
     public Long getBookId() {

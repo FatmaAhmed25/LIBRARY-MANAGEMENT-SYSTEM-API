@@ -37,6 +37,26 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
+    @ExceptionHandler(BookNotFoundException.class)
+    public ResponseEntity<String> handleBookNotFound(BookNotFoundException ex) {
+        return ResponseEntity.status(404).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(BookUnavailableException.class)
+    public ResponseEntity<String> handleBookUnavailable(BookUnavailableException ex) {
+        return ResponseEntity.status(400).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(UnauthorizedActionException.class)
+    public ResponseEntity<String> handleUnauthorizedAction(UnauthorizedActionException ex) {
+        return ResponseEntity.status(403).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(BorrowingRecordNotFoundException.class)
+    public ResponseEntity<String> handleBorrowingRecordNotFound(BorrowingRecordNotFoundException ex) {
+        return ResponseEntity.status(404).body(ex.getMessage());
+    }
+
     private ResponseEntity<Object> buildErrorResponse(String message, HttpStatus status) {
         Map<String, Object> errorDetails = new HashMap<>();
         errorDetails.put("timestamp", LocalDateTime.now());

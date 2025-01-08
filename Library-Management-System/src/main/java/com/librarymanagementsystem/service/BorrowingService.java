@@ -1,6 +1,7 @@
 package com.librarymanagementsystem.service;
 
 import com.librarymanagementsystem.dto.BorrowingRecordDTO;
+import com.librarymanagementsystem.exception.*;
 import com.librarymanagementsystem.model.Book;
 import com.librarymanagementsystem.model.BorrowingRecord;
 import com.librarymanagementsystem.model.User;
@@ -31,17 +32,20 @@ public class BorrowingService {
     public BorrowingRecordDTO borrowBook(Long bookId, Long customerId) {
         // Fetch customer
         User customer = userRepository.findById(customerId)
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
-        //Validate that the user is a customer
+                .orElseThrow(() -> new NoCustomersFoundException("Customer with ID " + customerId + " not found"));
+
+        // Validate that the user is a customer
         if (customer.getUserType() != User.UserType.ROLE_CUSTOMER) {
-            throw new IllegalStateException("Only customers can borrow books");
+            throw new UnauthorizedActionException("Only customers can borrow books");
         }
+
         // Fetch book
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+                .orElseThrow(() -> new BookNotFoundException("Book with ID " + bookId + " not found"));
+
         // Validate book availability
         if (book.getQuantity() <= 0) {
-            throw new IllegalStateException("Book is not available");
+            throw new BookUnavailableException("Book with ID " + bookId + " is not available");
         }
 
         // Create borrowing record
@@ -57,8 +61,8 @@ public class BorrowingService {
         book.setQuantity(book.getQuantity() - 1);
         bookRepository.save(book);
 
+        // Map saved record to DTO
         BorrowingRecordDTO borrowingRecordDTO = modelMapper.map(savedRecord, BorrowingRecordDTO.class);
-
         borrowingRecordDTO.setCustomerId(savedRecord.getCustomer().getId());
         borrowingRecordDTO.setCustomerUsername(savedRecord.getCustomer().getUsername());
         borrowingRecordDTO.setBookId(savedRecord.getBook().getId());
@@ -70,11 +74,11 @@ public class BorrowingService {
     public List<BorrowingRecordDTO> getBorrowedBooks(Long customerId) {
         // Validate customer existence
         User customer = userRepository.findById(customerId)
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+                .orElseThrow(() -> new NoCustomersFoundException("Customer with ID " + customerId + " not found"));
 
         // Ensure the user is a customer
         if (customer.getUserType() != User.UserType.ROLE_CUSTOMER) {
-            throw new IllegalStateException("Only customers have borrowing records");
+            throw new UnauthorizedActionException("Only customers have borrowing records");
         }
 
         // Fetch borrowing records and map them to DTOs
@@ -93,11 +97,11 @@ public class BorrowingService {
     public BorrowingRecord returnBook(Long borrowRecordId) {
         // Fetch the borrowing record
         BorrowingRecord record = borrowingRecordRepository.findById(borrowRecordId)
-                .orElseThrow(() -> new IllegalArgumentException("Borrowing record not found"));
+                .orElseThrow(() -> new BorrowingRecordNotFoundException("Borrowing record with ID " + borrowRecordId + " not found"));
 
         // Check if the book has already been returned
         if (record.getReturnDate() != null) {
-            throw new IllegalStateException("Book has already been returned");
+            throw new IllegalStateException("Book with ID " + borrowRecordId + " has already been returned");
         }
 
         // Mark the return date
@@ -117,11 +121,11 @@ public class BorrowingService {
     public List<BorrowingRecordDTO> fetchSortedBorrowingHistory(Long customerId, String sortBy, String sortDirection) {
         // Validate customer existence
         User customer = userRepository.findById(customerId)
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+                .orElseThrow(() -> new NoCustomersFoundException("Customer with ID " + customerId + " not found"));
 
         // Ensure the user is a customer
         if (customer.getUserType() != User.UserType.ROLE_CUSTOMER) {
-            throw new IllegalStateException("Only customers have borrowing records");
+            throw new UnauthorizedActionException("Only customers have borrowing records");
         }
 
         // Define sorting direction
@@ -142,9 +146,6 @@ public class BorrowingService {
                 })
                 .collect(Collectors.toList());
     }
-
-
-
-
 }
+
 
