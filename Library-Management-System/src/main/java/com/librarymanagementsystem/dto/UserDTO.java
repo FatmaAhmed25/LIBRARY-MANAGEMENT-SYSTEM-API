@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 public class UserDTO {
     private Long id;
     private String username;
-    private String email;
     private String userType;
 
     public Long getId() {
@@ -26,14 +25,6 @@ public class UserDTO {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getUserType() {
