@@ -59,6 +59,7 @@ public class UserController {
             description = "Fetch the details of a user by their unique ID."
     )
     @ApiResponses({
+            @ApiResponse(responseCode = "403", description = "Unauthorized access"),
             @ApiResponse(responseCode = "200", description = "User found"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
@@ -75,6 +76,7 @@ public class UserController {
     @SecurityRequirement(name="BearerAuth")
     @Operation(summary = "Delete a user by ID")
     @ApiResponses({
+            @ApiResponse(responseCode = "403", description = "Unauthorized access"),
             @ApiResponse(responseCode = "200", description = "User deleted successfully"),
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "400", description = "Bad request or validation error"),

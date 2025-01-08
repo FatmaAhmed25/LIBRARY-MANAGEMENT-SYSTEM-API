@@ -67,8 +67,6 @@ public class UserService {
         }
     }
 
-
-
     //taking control of login
     public AuthResponseDTO verify(User user) {
         try {
@@ -77,7 +75,8 @@ public class UserService {
             );
             if (authentication.isAuthenticated()) {
                 String token = jwtService.generateToken(user.getUsername());
-                return new AuthResponseDTO("Login successful", token);
+                User userFound = userRepository.findByUsername(user.getUsername());
+                return new AuthResponseDTO("Login successful with "+userFound.getUserType().toString(), token);
             } else {
                 return new AuthResponseDTO("Authentication failed", null);
             }
