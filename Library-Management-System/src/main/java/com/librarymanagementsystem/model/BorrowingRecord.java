@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class BorrowingRecord {
 
+
     @Id
     @GeneratedValue
     private Long id;
