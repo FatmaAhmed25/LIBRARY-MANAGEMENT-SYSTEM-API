@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -54,6 +55,7 @@ public class UserController {
     }
 
     @GetMapping("/getUser/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @SecurityRequirement(name = "BearerAuth")
     @Operation(
             summary = "Get user by ID",
@@ -74,6 +76,7 @@ public class UserController {
     }
 
     @DeleteMapping("/deleteUser/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @SecurityRequirement(name="BearerAuth")
     @Operation(summary = "Delete a user by ID")
     @ApiResponses({

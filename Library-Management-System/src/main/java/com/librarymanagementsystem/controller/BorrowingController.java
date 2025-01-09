@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class BorrowingController {
     private BorrowingService borrowingService;
 
     @PostMapping("/borrow/{bookId}/{customerId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @SecurityRequirement(name = "BearerAuth")
     @Operation(
             summary = "Borrow a book",
@@ -41,6 +43,7 @@ public class BorrowingController {
     }
 
     @GetMapping("/borrowed/{customerId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER','ROLE_ADMIN')")
     @SecurityRequirement(name = "BearerAuth")
     @Operation(
             summary = "Get all borrowed books for a customer",
@@ -61,6 +64,7 @@ public class BorrowingController {
     }
 
     @PostMapping("/return/{borrowRecordId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER','ROLE_ADMIN')")
     @SecurityRequirement(name = "BearerAuth")
     @Operation(
             summary = "Return a borrowed book",
@@ -81,6 +85,7 @@ public class BorrowingController {
     }
 
     @GetMapping("/history/{customerId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER','ROLE_ADMIN')")
     @SecurityRequirement(name = "BearerAuth")
     @Operation(
             summary = "Fetch sorted borrowing history for a customer",
