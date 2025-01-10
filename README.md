@@ -27,6 +27,32 @@ The Library Management System (LMS) is a backend application built with Java and
 ### Steps to Set Up Locally
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/yourusername/library-management-system-backend.git
-   cd library-management-system-backend
+   git clone https://github.com/FatmaAhmed25/LIBRARY-MANAGEMENT-SYSTEM-API.git
+   cd Library-Management-System
    ```
+2. **Set up MySQL Database**:
+  Create a new database in MySQL:
+   ```bash
+   CREATE DATABASE library;
+   ```
+   Update the src/main/resources/application.properties file with your MySQL database credentials:
+   ```bash
+   spring.datasource.url=jdbc:mysql://localhost:3306/library_db
+   spring.datasource.username=root
+   spring.datasource.password=yourpassword
+   ```
+3. **Build the Project: If you're using Maven to manage dependencies:**:
+   ```bash
+   mvn clean install
+   ```
+4. **Run the Application: To start the backend server**:
+   ```bash
+   mvn spring-boot:run
+   ```
+5. **The backend will now be running on http://localhost:8080**.
+
+
+
+   
+   
+   
